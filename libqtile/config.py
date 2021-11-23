@@ -60,14 +60,14 @@ class Key:
     desc:
         description to be added to the key binding
     """
-    def __init__(self, modifiers: List[str], key: str, *commands, desc: str = ""):
+    def __init__(self, modifiers: list[str], key: str, *commands, desc: str = ""):
         self.modifiers = modifiers
         self.key = key
         self.commands = commands
         self.desc = desc
 
     def __repr__(self):
-        return "<Key (%s, %s)>" % (self.modifiers, self.key)
+        return f"<Key ({self.modifiers}, {self.key})>"
 
 
 class KeyChord:
@@ -87,8 +87,8 @@ class KeyChord:
         not be left after a keystroke (except for Esc which always leaves the
         current chord/mode).
     """
-    def __init__(self, modifiers: List[str], key: str,
-                 submappings: List[Union[Key, KeyChord]], mode: str = ""):
+    def __init__(self, modifiers: list[str], key: str,
+                 submappings: list[Key | KeyChord], mode: str = ""):
         self.modifiers = modifiers
         self.key = key
 
@@ -97,11 +97,11 @@ class KeyChord:
         self.mode = mode
 
     def __repr__(self):
-        return "<KeyChord (%s, %s)>" % (self.modifiers, self.key)
+        return f"<KeyChord ({self.modifiers}, {self.key})>"
 
 
 class Mouse:
-    def __init__(self, modifiers: List[str], button: str, *commands, **kwargs):
+    def __init__(self, modifiers: list[str], button: str, *commands, **kwargs):
         self.modifiers = modifiers
         self.button = button
         self.commands = commands
@@ -122,13 +122,13 @@ class Drag(Mouse):
         self.start = start
 
     def __repr__(self):
-        return "<Drag (%s, %s)>" % (self.modifiers, self.button)
+        return f"<Drag ({self.modifiers}, {self.button})>"
 
 
 class Click(Mouse):
     """Defines binding of a mouse click"""
     def __repr__(self):
-        return "<Click (%s, %s)>" % (self.modifiers, self.button)
+        return f"<Click ({self.modifiers}, {self.button})>"
 
 
 class EzConfig:
@@ -259,11 +259,11 @@ class Screen(CommandObject):
     previous_group: _Group
     index: int
 
-    def __init__(self, top: Optional[BarType] = None, bottom: Optional[BarType] = None,
-                 left: Optional[BarType] = None, right: Optional[BarType] = None,
-                 wallpaper: Optional[str] = None, wallpaper_mode: Optional[str] = None,
-                 x: Optional[int] = None, y: Optional[int] = None, width: Optional[int] = None,
-                 height: Optional[int] = None):
+    def __init__(self, top: BarType | None = None, bottom: BarType | None = None,
+                 left: BarType | None = None, right: BarType | None = None,
+                 wallpaper: str | None = None, wallpaper_mode: str | None = None,
+                 x: int | None = None, y: int | None = None, width: int | None = None,
+                 height: int | None = None):
 
         self.top = top
         self.bottom = bottom
@@ -506,11 +506,11 @@ class Group:
         Use this to define a display name other than name of the group.
         If set to None, the display name is set to the name.
     """
-    def __init__(self, name: str, matches: List[Match] = None, exclusive=False,
-                 spawn: Union[str, List[str]] = None, layout: str = None,
-                 layouts: List = None, persist=True, init=True,
+    def __init__(self, name: str, matches: list[Match] = None, exclusive=False,
+                 spawn: str | list[str] = None, layout: str = None,
+                 layouts: list = None, persist=True, init=True,
                  layout_opts=None, screen_affinity=None, position=sys.maxsize,
-                 label: Optional[str] = None):
+                 label: str | None = None):
         self.name = name
         self.label = label
         self.exclusive = exclusive
@@ -530,7 +530,7 @@ class Group:
             self,
             ['exclusive', 'spawn', 'layout', 'layouts', 'persist', 'init',
              'matches', 'layout_opts', 'screen_affinity'])
-        return '<config.Group %r (%s)>' % (self.name, attrs)
+        return f'<config.Group {self.name!r} ({attrs})>'
 
 
 class ScratchPad(Group):
@@ -562,7 +562,7 @@ class ScratchPad(Group):
         self.single = single
 
     def __repr__(self):
-        return '<config.ScratchPad %r (%s)>' % (
+        return '<config.ScratchPad {!r} ({})>'.format(
             self.name, ', '.join(dd.name for dd in self.dropdowns))
 
 
@@ -718,7 +718,7 @@ class Rule:
 
     def __repr__(self):
         actions = utils.describe_attributes(self, ['group', 'float', 'intrusive', 'break_on_match'])
-        return '<Rule match=%r actions=(%s)>' % (self.matchlist, actions)
+        return f'<Rule match={self.matchlist!r} actions=({actions})>'
 
 
 class DropDown(configurable.Configurable):

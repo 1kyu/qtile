@@ -35,7 +35,7 @@ except ImportError:
 def rename_hook(query, fro, to):
     # could match on dotted_name< 'hook' '.' 'subscribe' '.' '{name}' >
     # but the replacement gets more complicated...
-    selector = "'{name}'".format(name=fro)
+    selector = f"'{fro}'"
     q = query.select_pattern(selector)
     q.current.kwargs["name"] = fro
     return q.rename(to)

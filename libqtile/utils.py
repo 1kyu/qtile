@@ -110,7 +110,7 @@ def rgb(x: ColorType) -> Tuple[float, float, float, float]:
 
 def hex(x):
     r, g, b, _ = rgb(x)
-    return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
+    return f'#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}'
 
 
 def has_transparency(colour: ColorsType):
@@ -184,7 +184,7 @@ def describe_attributes(obj, attrs, func=lambda x: x):
     for attr in attrs:
         value = getattr(obj, attr, None)
         if func(value):
-            pairs.append('%s=%s' % (attr, value))
+            pairs.append(f'{attr}={value}')
 
     return ', '.join(pairs)
 
@@ -221,7 +221,7 @@ def lazify_imports(registry, package, fallback=None):
     def __getattr__(name):
         if name not in registry:
             raise AttributeError
-        module_path = "{}.{}".format(package, registry[name])
+        module_path = f"{package}.{registry[name]}"
         return import_class(module_path, name, fallback=fallback)
 
     return __all__, __dir__, __getattr__
@@ -314,11 +314,11 @@ def guess_terminal(preference=None):
     ]
 
     for terminal in test_terminals:
-        logger.debug('Guessing terminal: {}'.format(terminal))
+        logger.debug(f'Guessing terminal: {terminal}')
         if not which(terminal, os.X_OK):
             continue
 
-        logger.info('Terminal found: {}'.format(terminal))
+        logger.info(f'Terminal found: {terminal}')
         return terminal
 
     logger.error('Default terminal has not been found.')
@@ -396,7 +396,7 @@ async def add_signal_receiver(callback, session_bus=False, signal_name=None,
         "interface": dbus_interface
     }
 
-    rule = ",".join("{}='{}'".format(k, v)
+    rule = ",".join(f"{k}='{v}'"
                     for k, v in match_args.items() if v)
 
     bus, msg = await _send_dbus_message(session_bus,

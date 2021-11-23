@@ -513,8 +513,8 @@ class _Window:
             self._height = None
             self._depth = None
 
-        self.float_x: Optional[int] = None
-        self.float_y: Optional[int] = None
+        self.float_x: int | None = None
+        self.float_y: int | None = None
         self._float_width: int = self._width
         self._float_height: int = self._height
 
@@ -1304,7 +1304,7 @@ class Window(_Window, base.Window):
 
     @fullscreen.setter
     def fullscreen(self, do_full):
-        atom = set([self.qtile.core.conn.atoms["_NET_WM_STATE_FULLSCREEN"]])
+        atom = {self.qtile.core.conn.atoms["_NET_WM_STATE_FULLSCREEN"]}
         prev_state = set(self.window.get_property('_NET_WM_STATE', 'ATOM', unpack=int))
 
         def set_state(old_state, new_state):
@@ -1379,11 +1379,11 @@ class Window(_Window, base.Window):
 
     def cmd_static(
         self,
-        screen: Optional[int] = None,
-        x: Optional[int] = None,
-        y: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        screen: int | None = None,
+        x: int | None = None,
+        y: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         """Makes this window a static window, attached to a Screen
 
@@ -1593,7 +1593,7 @@ class Window(_Window, base.Window):
                 arr[i + 1] = int(arr[i + 1] * mult)
                 arr[i + 2] = int(arr[i + 2] * mult)
             icon = icon[next_pix:]
-            icons["%sx%s" % (width, height)] = arr
+            icons[f"{width}x{height}"] = arr
         self.icons = icons
         hook.fire("net_wm_icon_change", self)
 
@@ -1622,7 +1622,7 @@ class Window(_Window, base.Window):
                 elif action == _NET_WM_STATE_ADD:
                     current_state.add(prop)
                 elif action == _NET_WM_STATE_TOGGLE:
-                    current_state ^= set([prop])  # toggle :D
+                    current_state ^= {prop}  # toggle :D
 
             self.window.set_property('_NET_WM_STATE', list(current_state))
         elif atoms["_NET_ACTIVE_WINDOW"] == opcode:
@@ -1654,7 +1654,7 @@ class Window(_Window, base.Window):
                 elif focus_behavior == "never":
                     logger.debug("Ignoring focus request")
                 else:
-                    logger.debug("Invalid value for focus_on_window_activation: {}".format(focus_behavior))
+                    logger.debug(f"Invalid value for focus_on_window_activation: {focus_behavior}")
         elif atoms["_NET_CLOSE_WINDOW"] == opcode:
             self.kill()
         elif atoms["WM_CHANGE_STATE"] == opcode:

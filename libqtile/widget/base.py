@@ -247,7 +247,7 @@ class _Widget(CommandObject, configurable.Configurable):
         self.mouse_callbacks = defaults
 
     def button_press(self, x, y, button):
-        name = 'Button{0}'.format(button)
+        name = f'Button{button}'
         if name in self.mouse_callbacks:
             cmd = self.mouse_callbacks[name]
             if isinstance(cmd, LazyCall):
@@ -256,7 +256,7 @@ class _Widget(CommandObject, configurable.Configurable):
                         (cmd.selectors, cmd.name, cmd.args, cmd.kwargs)
                     )
                     if status in (interface.ERROR, interface.EXCEPTION):
-                        logger.error("Mouse callback command error %s: %s" % (cmd.name, val))
+                        logger.error(f"Mouse callback command error {cmd.name}: {val}")
             else:
                 cmd()
 

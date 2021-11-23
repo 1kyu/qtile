@@ -84,7 +84,7 @@ class Mpris2(base._TextBox):
                         dbus_interface="org.freedesktop.DBus.Properties")
 
         if not subscribe:
-            msg = "Unable to add signal receiver for {}.".format(self.objname)
+            msg = f"Unable to add signal receiver for {self.objname}."
             logger.warning(msg)
 
     def message(self, message):
@@ -111,7 +111,7 @@ class Mpris2(base._TextBox):
                 if isinstance(val, str):
                     meta_list.append(val)
                 elif isinstance(val, list):
-                    val = " - ".join((y for y in val if isinstance(y, str)))
+                    val = " - ".join(y for y in val if isinstance(y, str))
                     meta_list.append(val)
 
             self.displaytext = ' - '.join(meta_list)
@@ -126,7 +126,7 @@ class Mpris2(base._TextBox):
                 self.displaytext = self.stop_pause_text
             elif self.displaytext:
                 self.is_playing = False
-                self.displaytext = 'Paused: {}'.format(self.displaytext)
+                self.displaytext = f'Paused: {self.displaytext}'
             else:
                 self.is_playing = False
                 self.displaytext = 'Paused'

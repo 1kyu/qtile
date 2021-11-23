@@ -38,7 +38,7 @@ ItemT = Optional[Tuple[bool, List[Union[str, int]]]]
 class SelectError(Exception):
     """Error raised in resolving a command graph object"""
 
-    def __init__(self, err_string: str, name: str, selectors: List[SelectorType]):
+    def __init__(self, err_string: str, name: str, selectors: list[SelectorType]):
         super().__init__("{}, name: {}, selectors: {}".format(err_string,
                                                               name,
                                                               selectors))
@@ -62,7 +62,7 @@ class CommandObject(metaclass=abc.ABCMeta):
     (c.f. docstring for `.items()` and `.select()`).
     """
 
-    def select(self, selectors: List[SelectorType]) -> CommandObject:
+    def select(self, selectors: list[SelectorType]) -> CommandObject:
         """Return a selected object
 
         Recursively finds an object specified by a list of `(name, selector)`
@@ -89,7 +89,7 @@ class CommandObject(metaclass=abc.ABCMeta):
             obj = maybe_obj
         return obj
 
-    def items(self, name: str) -> Tuple[bool, Optional[List[Union[str, int]]]]:
+    def items(self, name: str) -> tuple[bool, list[str | int] | None]:
         """Build a list of contained items for the given item class
 
         Returns a tuple `(root, items)` for the specified item class, where:
@@ -116,7 +116,7 @@ class CommandObject(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def _select(self, name: str, sel: Optional[Union[str, int]]) -> Optional[CommandObject]:
+    def _select(self, name: str, sel: str | int | None) -> CommandObject | None:
         """Select the given item of the given item class
 
         This method is called with the following guarantees:
@@ -144,19 +144,19 @@ class CommandObject(metaclass=abc.ABCMeta):
         return getattr(self, "cmd_" + name, None)
 
     @property
-    def commands(self) -> List[str]:
+    def commands(self) -> list[str]:
         """All of the commands on the given object"""
         cmds = [i[4:] for i in dir(self) if i.startswith("cmd_")]
         return cmds
 
-    def cmd_commands(self) -> List[str]:
+    def cmd_commands(self) -> list[str]:
         """Returns a list of possible commands for this object
 
         Used by __qsh__ for command completion and online help
         """
         return self.commands
 
-    def cmd_items(self, name) -> Tuple[bool, Optional[List[Union[str, int]]]]:
+    def cmd_items(self, name) -> tuple[bool, list[str | int] | None]:
         """Returns a list of contained items for the specified name
 
         Used by __qsh__ to allow navigation of the object graph.
@@ -185,7 +185,7 @@ class CommandObject(metaclass=abc.ABCMeta):
             signature = signature.replace(parameters=parameters)
         return str(signature)
 
-    def cmd_eval(self, code: str) -> Tuple[bool, Optional[str]]:
+    def cmd_eval(self, code: str) -> tuple[bool, str | None]:
         """Evaluates code in the same context as this function
 
         Return value is tuple `(success, result)`, success being a boolean and

@@ -365,7 +365,7 @@ class Bar(Gap, configurable.Configurable):
         stretches = [i for i in widgets if i.length_type == STRETCH]
         if stretches:
             stretchspace = length - sum(
-                [i.length for i in widgets if i.length_type != STRETCH]
+                i.length for i in widgets if i.length_type != STRETCH
             )
             stretchspace = max(stretchspace, 0)
             num_stretches = len(stretches)
@@ -405,7 +405,7 @@ class Bar(Gap, configurable.Configurable):
                 i.offsety = offset
                 offset += i.length
 
-    def get_widget_in_position(self, x: int, y: int) -> typing.Optional[_Widget]:
+    def get_widget_in_position(self, x: int, y: int) -> _Widget | None:
         if self.horizontal:
             for i in self.widgets:
                 if x < i.offsetx + i.length:

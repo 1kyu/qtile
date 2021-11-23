@@ -47,7 +47,7 @@ class FakeIMAP(ModuleType):
 
             return (
                 "OK",
-                ['("{}" (MESSAGES 10 UNSEEN 2)'.format(path).encode()]
+                [f'("{path}" (MESSAGES 10 UNSEEN 2)'.encode()]
             )
 
 

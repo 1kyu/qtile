@@ -107,12 +107,12 @@ class Backlight(base.InLoopPollText):
 
     def _load_file(self, path):
         try:
-            with open(path, 'r') as f:
+            with open(path) as f:
                 return float(f.read().strip())
         except FileNotFoundError:
             logger.debug('Failed to get %s' % path)
             raise RuntimeError(
-                'Unable to read status for {}'.format(os.path.basename(path))
+                f'Unable to read status for {os.path.basename(path)}'
             )
 
     def _get_info(self):
@@ -124,7 +124,7 @@ class Backlight(base.InLoopPollText):
         try:
             percent = self._get_info()
         except RuntimeError as e:
-            return 'Error: {}'.format(e)
+            return f'Error: {e}'
 
         return self.format.format(percent=percent)
 
@@ -135,7 +135,7 @@ class Backlight(base.InLoopPollText):
                 with open(self.brightness_file, 'w') as f:
                     f.write(str(round(value)))
             except PermissionError:
-                logger.warning("Cannot set brightness: no write permission for {0}"
+                logger.warning("Cannot set brightness: no write permission for {}"
                                .format(self.brightness_file))
         else:
             self.call_process(shlex.split(self.change_command.format(value)))

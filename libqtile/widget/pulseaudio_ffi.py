@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from cffi import FFI
 
 pulseaudio_ffi = FFI()

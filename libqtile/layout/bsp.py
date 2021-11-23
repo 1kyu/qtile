@@ -32,16 +32,14 @@ class _BspNode():
     def __iter__(self):
         yield self
         for child in self.children:
-            for c in child:
-                yield c
+            yield from child
 
     def clients(self):
         if self.client:
             yield self.client
         else:
             for child in self.children:
-                for c in child.clients():
-                    yield c
+                yield from child.clients()
 
     def _shortest(self, length):
         if len(self.children) == 0:

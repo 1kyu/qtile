@@ -93,7 +93,7 @@ class Core(base.Core, wlrq.HasListeners):
 
     def __init__(self):
         """Setup the Wayland core backend"""
-        self.qtile: Optional[Qtile] = None
+        self.qtile: Qtile | None = None
         self.desktops: int = 1
         self.current_desktop: int = 0
 
@@ -103,24 +103,24 @@ class Core(base.Core, wlrq.HasListeners):
         self.renderer = self.backend.renderer
         self.socket = self.display.add_socket()
         self.fd = None
-        self._hovered_internal: Optional[window.Internal] = None
-        self.focused_internal: Optional[window.Internal] = None
+        self._hovered_internal: window.Internal | None = None
+        self.focused_internal: window.Internal | None = None
 
         # These windows have not been mapped yet; they'll get managed when mapped
-        self.pending_windows: List[window.WindowType] = []
+        self.pending_windows: list[window.WindowType] = []
 
         # mapped_windows contains just regular windows
-        self.mapped_windows: List[window.WindowType] = []  # Ascending in Z
+        self.mapped_windows: list[window.WindowType] = []  # Ascending in Z
         # stacked_windows also contains layer_shell windows from the current output
         self.stacked_windows: Sequence[window.WindowType] = []  # Ascending in Z
-        self._current_output: Optional[Output] = None
+        self._current_output: Output | None = None
 
         # set up inputs
-        self.keyboards: List[keyboard.Keyboard] = []
-        self.grabbed_keys: List[Tuple[int, int]] = []
-        self.grabbed_buttons: List[Tuple[int, int]] = []
+        self.keyboards: list[keyboard.Keyboard] = []
+        self.grabbed_keys: list[tuple[int, int]] = []
+        self.grabbed_buttons: list[tuple[int, int]] = []
         DataDeviceManager(self.display)
-        self.live_dnd: Optional[wlrq.Dnd] = None
+        self.live_dnd: wlrq.Dnd | None = None
         DataControlManagerV1(self.display)
         self.seat = seat.Seat(self.display, "seat0")
         self.add_listener(
@@ -131,7 +131,7 @@ class Core(base.Core, wlrq.HasListeners):
         self.add_listener(self.backend.new_input_event, self._on_new_input)
 
         # set up outputs
-        self.outputs: List[Output] = []
+        self.outputs: list[Output] = []
         self.add_listener(self.backend.new_output_event, self._on_new_output)
         self.output_layout = OutputLayout()
         self.add_listener(
@@ -188,8 +188,8 @@ class Core(base.Core, wlrq.HasListeners):
             pointer_constraints_v1.new_constraint_event,
             self._on_new_pointer_constraint,
         )
-        self.pointer_constraints: Set[wlrq.PointerConstraint] = set()
-        self.active_pointer_constraint: Optional[wlrq.PointerConstraint] = None
+        self.pointer_constraints: set[wlrq.PointerConstraint] = set()
+        self.active_pointer_constraint: wlrq.PointerConstraint | None = None
         self._relative_pointer_manager_v1 = RelativePointerManagerV1(self.display)
 
         # start
@@ -738,7 +738,7 @@ class Core(base.Core, wlrq.HasListeners):
         else:
             self.stacked_windows = self.mapped_windows
 
-    def get_screen_info(self) -> List[Tuple[int, int, int, int]]:
+    def get_screen_info(self) -> list[tuple[int, int, int, int]]:
         """Get the screen information"""
         return [
             screen.get_geometry()
@@ -746,14 +746,14 @@ class Core(base.Core, wlrq.HasListeners):
             if screen.wlr_output.enabled
         ]
 
-    def grab_key(self, key: Union[config.Key, config.KeyChord]) -> Tuple[int, int]:
+    def grab_key(self, key: config.Key | config.KeyChord) -> tuple[int, int]:
         """Configure the backend to grab the key event"""
         keysym = xkb.keysym_from_name(key.key, case_insensitive=True)
         mask_key = wlrq.translate_masks(key.modifiers)
         self.grabbed_keys.append((keysym, mask_key))
         return keysym, mask_key
 
-    def ungrab_key(self, key: Union[config.Key, config.KeyChord]) -> Tuple[int, int]:
+    def ungrab_key(self, key: config.Key | config.KeyChord) -> tuple[int, int]:
         """Release the given key event"""
         keysym = xkb.keysym_from_name(key.key, case_insensitive=True)
         mask_key = wlrq.translate_masks(key.modifiers)
@@ -827,7 +827,7 @@ class Core(base.Core, wlrq.HasListeners):
         """Get the keysym for a key from its name"""
         return xkb.keysym_from_name(name, case_insensitive=True)
 
-    def simulate_keypress(self, modifiers: List[str], key: str) -> None:
+    def simulate_keypress(self, modifiers: list[str], key: str) -> None:
         """Simulates a keypress on the focused window."""
         keysym = xkb.keysym_from_name(key, case_insensitive=True)
         mods = wlrq.translate_masks(modifiers)
@@ -842,9 +842,9 @@ class Core(base.Core, wlrq.HasListeners):
 
     def cmd_set_keymap(
         self,
-        layout: Optional[str] = None,
-        options: Optional[str] = None,
-        variant: Optional[str] = None,
+        layout: str | None = None,
+        options: str | None = None,
+        variant: str | None = None,
     ) -> None:
         """
         Set the keymap for the current keyboard.

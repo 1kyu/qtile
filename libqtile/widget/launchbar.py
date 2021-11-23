@@ -86,7 +86,7 @@ class LaunchBar(base._Widget):
         self.progs = dict(enumerate([{'name': prog[0], 'cmd': prog[1],
                                       'comment': prog[2] if len(prog) > 2 else
                                       None} for prog in progs]))
-        self.progs_name = set([prog['name'] for prog in self.progs.values()])
+        self.progs_name = {prog['name'] for prog in self.progs.values()}
         self.length_type = bar.STATIC
         self.length = 0
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Sebastian Bechtel
 # Copyright (c) 2013 Tao Sauvage
 # Copyright (c) 2014 Sebastian Kricner
@@ -82,7 +81,7 @@ class Wlan(base.InLoopPollText):
                 quality=quality,
                 percent=(quality / 70)
             )
-        except EnvironmentError:
+        except OSError:
             logger.error(
                 '%s: Probably your wlan device is switched off or '
                 ' otherwise not present in your system.',

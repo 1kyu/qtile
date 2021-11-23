@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Timo Schmiade
 # Copyright (c) 2012 Phil Jackson
 # Copyright (c) 2013 Tao Sauvage
@@ -103,7 +102,7 @@ class Maildir(base.ThreadPoolText):
         if color is None:  # default to self.foreground
             return s
 
-        return s.join(('<span foreground="{}">'.format(color),
+        return s.join((f'<span foreground="{color}">',
                        '</span>'))
 
     def format_text(self, state: Dict[str, int]) -> str:

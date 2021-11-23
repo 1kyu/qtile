@@ -236,7 +236,7 @@ class StatusNotifierItem:  # noqa: E303
         if not self._pixmaps.get("Icon", False):
             return []
 
-        return sorted([size for size in self._pixmaps["Icon"]])
+        return sorted(size for size in self._pixmaps["Icon"])
 
     def _get_surfaces(self, size):
         """
@@ -627,7 +627,7 @@ class StatusNotifier(base._Widget):
         icon = self.find_icon_at_pos(x, y)
         self.selected_item = icon if icon else None
 
-        name = 'Button{0}'.format(button)
+        name = f'Button{button}'
         if name in self.mouse_callbacks:
             self.mouse_callbacks[name]()
 

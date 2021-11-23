@@ -461,7 +461,7 @@ def get_selection(args):
             names = names.split(",")
             for name in names:
                 if name not in specs[layout]:
-                    errors.append("There is no spec for {}:{}".format(layout, name))
+                    errors.append(f"There is no spec for {layout}:{name}")
             selection.append((layout, names))
         else:
             if arg not in specs:
@@ -499,11 +499,11 @@ def main(args=None):
         for name in names:
             success, errors = take(name, layout, specs[layout][name])
             if success:
-                logging.info("Shooting {}:{} - OK!".format(layout, name))
+                logging.info(f"Shooting {layout}:{name} - OK!")
             else:
                 ok = False
                 logging.error(
-                    "Shooting {}:{} - failed:\n{}".format(layout, name, errors)
+                    f"Shooting {layout}:{name} - failed:\n{errors}"
                 )
 
     # switch back to original group

@@ -55,19 +55,19 @@ class Core(CommandObject, metaclass=ABCMeta):
     def remove_listener(self) -> None:
         """Setup a listener for the given qtile instance"""
 
-    def update_desktops(self, groups: List[_Group], index: int) -> None:
+    def update_desktops(self, groups: list[_Group], index: int) -> None:
         """Set the current desktops of the window manager"""
 
     @abstractmethod
-    def get_screen_info(self) -> List[Tuple[int, int, int, int]]:
+    def get_screen_info(self) -> list[tuple[int, int, int, int]]:
         """Get the screen information"""
 
     @abstractmethod
-    def grab_key(self, key: Union[config.Key, config.KeyChord]) -> Tuple[int, int]:
+    def grab_key(self, key: config.Key | config.KeyChord) -> tuple[int, int]:
         """Configure the backend to grab the key event"""
 
     @abstractmethod
-    def ungrab_key(self, key: Union[config.Key, config.KeyChord]) -> Tuple[int, int]:
+    def ungrab_key(self, key: config.Key | config.KeyChord) -> tuple[int, int]:
         """Release the given key event"""
 
     @abstractmethod
@@ -96,7 +96,7 @@ class Core(CommandObject, metaclass=ABCMeta):
     def warp_pointer(self, x: int, y: int) -> None:
         """Warp the pointer to the given coordinates relative."""
 
-    def update_client_list(self, windows_map: Dict[int, WindowType]) -> None:
+    def update_client_list(self, windows_map: dict[int, WindowType]) -> None:
         """Update the list of windows being managed"""
 
     @contextlib.contextmanager
@@ -114,14 +114,14 @@ class Core(CommandObject, metaclass=ABCMeta):
     def graceful_shutdown(self):
         """Try to close windows gracefully before exiting"""
 
-    def simulate_keypress(self, modifiers: List[str], key: str) -> None:
+    def simulate_keypress(self, modifiers: list[str], key: str) -> None:
         """Simulate a keypress with given modifiers"""
 
     def keysym_from_name(self, name: str) -> int:
         """Get the keysym for a key from its name"""
         raise NotImplementedError
 
-    def cmd_info(self) -> Dict:
+    def cmd_info(self) -> dict:
         """Get basic information about the running backend."""
         return {
             "backend": self.name,
@@ -143,7 +143,7 @@ class _Window(CommandObject, metaclass=ABCMeta):
     def __init__(self):
         self.borderwidth: int = 0
         self.name: str = "<no name>"
-        self.reserved_space: Optional[Tuple[int, int, int, int]] = None
+        self.reserved_space: tuple[int, int, int, int] | None = None
         # Window.cmd_static sets this in case it is hooked to client_new to stop the
         # Window object from being managed, now that a Static is being used instead
         self.defunct: bool = False
@@ -165,15 +165,15 @@ class _Window(CommandObject, metaclass=ABCMeta):
     def kill(self) -> None:
         """Kill the window"""
 
-    def get_wm_class(self) -> Optional[List]:
+    def get_wm_class(self) -> list | None:
         """Return the class(es) of the window"""
         return None
 
-    def get_wm_type(self) -> Optional[str]:
+    def get_wm_type(self) -> str | None:
         """Return the type of the window"""
         return None
 
-    def get_wm_role(self) -> Optional[str]:
+    def get_wm_role(self) -> str | None:
         """Return the role of the window"""
         return None
 
@@ -207,11 +207,11 @@ class _Window(CommandObject, metaclass=ABCMeta):
         return None
 
     @abstractmethod
-    def info(self) -> Dict[str, Any]:
+    def info(self) -> dict[str, Any]:
         """Return information on this window."""
         return {}
 
-    def cmd_info(self) -> Dict:
+    def cmd_info(self) -> dict:
         """Return a dictionary of info."""
         return self.info()
 
@@ -227,15 +227,15 @@ class Window(_Window, metaclass=ABCMeta):
     qtile: Qtile
 
     # If float_x or float_y are None, the window has never floated
-    float_x: Optional[int]
-    float_y: Optional[int]
+    float_x: int | None
+    float_y: int | None
 
     def __repr__(self):
         return "Window(name=%r, wid=%i)" % (self.name, self.wid)
 
     @property
     @abstractmethod
-    def group(self) -> Optional[_Group]:
+    def group(self) -> _Group | None:
         """The group to which this window belongs."""
 
     @property
@@ -278,7 +278,7 @@ class Window(_Window, metaclass=ABCMeta):
 
     @abstractmethod
     def togroup(
-        self, group_name: Optional[str] = None, *, switch_group: bool = False
+        self, group_name: str | None = None, *, switch_group: bool = False
     ) -> None:
         """Move window to a specified group
 
@@ -293,7 +293,7 @@ class Window(_Window, metaclass=ABCMeta):
         """Whether this window has user-defined geometry"""
         return False
 
-    def is_transient_for(self) -> Optional["WindowType"]:
+    def is_transient_for(self) -> WindowType | None:
         """What window is this window a transient window for?"""
         return None
 
@@ -312,11 +312,11 @@ class Window(_Window, metaclass=ABCMeta):
         return self.match(*args, **kwargs)
 
     @abstractmethod
-    def cmd_get_position(self) -> Tuple[int, int]:
+    def cmd_get_position(self) -> tuple[int, int]:
         """Get the (x, y) of the window"""
 
     @abstractmethod
-    def cmd_get_size(self) -> Tuple[int, int]:
+    def cmd_get_size(self) -> tuple[int, int]:
         """Get the (width, height) of the window"""
 
     @abstractmethod
@@ -385,8 +385,8 @@ class Window(_Window, metaclass=ABCMeta):
 
     def cmd_togroup(
         self,
-        group_name: Optional[str] = None,
-        groupName: Optional[str] = None,  # Deprecated  # noqa: N803
+        group_name: str | None = None,
+        groupName: str | None = None,  # Deprecated  # noqa: N803
         switch_group: bool = False
     ) -> None:
         """Move window to a specified group
@@ -403,7 +403,7 @@ class Window(_Window, metaclass=ABCMeta):
             group_name = groupName
         self.togroup(group_name, switch_group=switch_group)
 
-    def cmd_toscreen(self, index: Optional[int] = None) -> None:
+    def cmd_toscreen(self, index: int | None = None) -> None:
         """Move window to a specified screen.
 
         If index is not specified, we assume the current screen
@@ -462,11 +462,11 @@ class Window(_Window, metaclass=ABCMeta):
     @abstractmethod
     def cmd_static(
         self,
-        screen: Optional[int] = None,
-        x: Optional[int] = None,
-        y: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        screen: int | None = None,
+        x: int | None = None,
+        y: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         """Makes this window a static window, attached to a Screen.
 
@@ -515,9 +515,9 @@ class Static(_Window, metaclass=ABCMeta):
     height: Any
 
     def __repr__(self):
-        return "Static(name=%r, wid=%s)" % (self.name, self.wid)
+        return f"Static(name={self.name!r}, wid={self.wid})"
 
-    def info(self) -> Dict:
+    def info(self) -> dict:
         """Return a dictionary of info."""
         return dict(
             name=self.name,
@@ -539,8 +539,8 @@ class Drawer:
     finally drawing all operations to a backend-specific target.
     """
     # We need to track extent of drawing to know when to redraw.
-    previous_rect: Tuple[int, int, Optional[int], Optional[int]]
-    current_rect: Tuple[int, int, Optional[int], Optional[int]]
+    previous_rect: tuple[int, int, int | None, int | None]
+    current_rect: tuple[int, int, int | None, int | None]
 
     def __init__(self, qtile: Qtile, win: Internal, width: int, height: int):
         self.qtile = qtile
@@ -552,7 +552,7 @@ class Drawer:
         self.ctx: cairocffi.Context
         self._reset_surface()
 
-        self.mirrors: Dict[Drawer, bool] = {}
+        self.mirrors: dict[Drawer, bool] = {}
 
         self.current_rect = (0, 0, 0, 0)
         self.previous_rect = (-1, -1, -1, -1)
@@ -681,8 +681,8 @@ class Drawer:
         self,
         offsetx: int = 0,
         offsety: int = 0,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ):
         """
         A wrapper for the draw operation.
@@ -714,8 +714,8 @@ class Drawer:
         self,
         offsetx: int = 0,
         offsety: int = 0,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ):
         """
         This draws our cached operations to the Internal window.

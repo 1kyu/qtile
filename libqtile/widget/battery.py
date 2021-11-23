@@ -55,12 +55,11 @@ class BatteryState(Enum):
     UNKNOWN = 5
 
 
-BatteryStatus = NamedTuple("BatteryStatus", [
-    ("state", BatteryState),
-    ("percent", float),
-    ("power", float),
-    ("time", int),
-])
+class BatteryStatus(NamedTuple):
+    state: BatteryState
+    percent: float
+    power: float
+    time: int
 
 
 class _Battery(ABC):
@@ -207,7 +206,7 @@ class _LinuxBattery(_Battery, configurable.Configurable):
         configurable.Configurable.__init__(self, **config)
         self.add_defaults(_LinuxBattery.defaults)
         if isinstance(self.battery, int):
-            self.battery = "BAT{}".format(self.battery)
+            self.battery = f"BAT{self.battery}"
 
     def _get_battery_name(self):
         if os.path.isdir(self.BAT_DIR):
@@ -228,10 +227,10 @@ class _LinuxBattery(_Battery, configurable.Configurable):
             value_type = ''
 
         try:
-            with open(path, 'r') as f:
+            with open(path) as f:
                 return f.read().strip(), value_type
         except OSError as e:
-            logger.debug("Failed to read '{}': {}".format(path, e))
+            logger.debug(f"Failed to read '{path}': {e}")
             if isinstance(e, FileNotFoundError):
                 # Let's try another file if this one doesn't exist
                 return None
@@ -259,7 +258,7 @@ class _LinuxBattery(_Battery, configurable.Configurable):
                 self.filenames[name] = filename
                 return value
 
-        raise RuntimeError("Unable to read status for {}".format(name))
+        raise RuntimeError(f"Unable to read status for {name}")
 
     def update_status(self) -> BatteryStatus:
         stat = self._get_param('status_file')[0]
@@ -361,13 +360,13 @@ class Battery(base.ThreadPoolText):
         try:
             status = self._battery.update_status()
         except RuntimeError as e:
-            return 'Error: {}'.format(e)
+            return f'Error: {e}'
 
         if self.notify_below:
             percent = int(status.percent * 100)
             if percent < self.notify_below:
                 if not self._has_notified:
-                    send_notification("Warning", "Battery at {0}%".format(percent), urgent=True)
+                    send_notification("Warning", f"Battery at {percent}%", urgent=True)
                     self._has_notified = True
             elif self._has_notified:
                 self._has_notified = False

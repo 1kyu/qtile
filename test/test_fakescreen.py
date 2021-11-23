@@ -242,7 +242,7 @@ def test_float_change_screens(manager):
     manager.test_window('tiled')
     manager.test_window('float')
     manager.c.window.toggle_floating()
-    assert set(manager.c.group.info()['windows']) == set(('tiled', 'float'))
+    assert set(manager.c.group.info()['windows']) == {'tiled', 'float'}
     assert manager.c.group.info()['floating_info']['clients'] == ['float']
     assert manager.c.window.info()['width'] == 100
     assert manager.c.window.info()['height'] == 100
@@ -261,7 +261,7 @@ def test_float_change_screens(manager):
         'y': 0, 'x': 500, 'index': 1, 'width': 300, 'height': 380}
     manager.c.group['a'].toscreen()
     assert manager.c.group.info()['name'] == 'a'
-    assert set(manager.c.group.info()['windows']) == set(('tiled', 'float'))
+    assert set(manager.c.group.info()['windows']) == {'tiled', 'float'}
     assert manager.c.window.info()['name'] == 'float'
     # width/height unchanged
     assert manager.c.window.info()['width'] == 100
@@ -279,7 +279,7 @@ def test_float_change_screens(manager):
     assert manager.c.group.info()['name'] == 'c'
     manager.c.group['a'].toscreen()
     assert manager.c.group.info()['name'] == 'a'
-    assert set(manager.c.group.info()['windows']) == set(('tiled', 'float'))
+    assert set(manager.c.group.info()['windows']) == {'tiled', 'float'}
     assert manager.c.window.info()['name'] == 'float'
     # width/height unchanged
     assert manager.c.window.info()['width'] == 100
@@ -295,7 +295,7 @@ def test_float_change_screens(manager):
     assert manager.c.group.info()['name'] == 'd'
     manager.c.group['a'].toscreen()
     assert manager.c.group.info()['name'] == 'a'
-    assert set(manager.c.group.info()['windows']) == set(('tiled', 'float'))
+    assert set(manager.c.group.info()['windows']) == {'tiled', 'float'}
     assert manager.c.window.info()['name'] == 'float'
     # width/height unchanged
     assert manager.c.window.info()['width'] == 100
@@ -311,7 +311,7 @@ def test_float_change_screens(manager):
     assert manager.c.group.info()['name'] == 'b'
     manager.c.group['a'].toscreen()
     assert manager.c.group.info()['name'] == 'a'
-    assert set(manager.c.group.info()['windows']) == set(('tiled', 'float'))
+    assert set(manager.c.group.info()['windows']) == {'tiled', 'float'}
     assert manager.c.window.info()['name'] == 'float'
     # back to the original location
     assert manager.c.window.info()['width'] == 100

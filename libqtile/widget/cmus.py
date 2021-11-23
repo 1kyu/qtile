@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2015, Juan Riquelme González
 #
 # This program is free software: you can redistribute it and/or modify
@@ -94,14 +93,14 @@ class Cmus(base.ThreadPoolText):
             title = info['title']
             if self.local:
                 artist = info['artist']
-                now_playing = "{0} - {1}".format(artist, title)
+                now_playing = f"{artist} - {title}"
             else:
                 if info['stream']:
                     now_playing = info['stream']
                 else:
                     now_playing = title
             if now_playing:
-                now_playing = "♫ {0}".format(now_playing)
+                now_playing = f"♫ {now_playing}"
         return pangocffi.markup_escape_text(now_playing)
 
     def play(self):

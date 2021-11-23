@@ -251,7 +251,7 @@ class Mpd2(base.ThreadPoolText):
                 err = err1.format(Class=type(context).__name__, attr=attr_name)
             else:
                 err = err2.format(Class=type(context).__name__, attr=attr_name)
-            logger.exception(err + " {}".format(e.args[0]))
+            logger.exception(err + f" {e.args[0]}")
 
     def toggle(self):
         """toggle play/pause."""
@@ -303,7 +303,7 @@ class Mpd2(base.ThreadPoolText):
                 if song_info['fulltime'] != default else 0.0
             elapsed = float(song_info['elapsed'])\
                 if song_info['elapsed'] != default else 0.0
-            song_info['remaining'] = "{:.2f}".format(float(total - elapsed))
+            song_info['remaining'] = f"{float(total - elapsed):.2f}"
 
         # mpd serializes tags containing commas as lists.
         for key in song_info:
@@ -330,7 +330,7 @@ class Mpd2(base.ThreadPoolText):
         if self.color_progress and status['state'] != 'stop':
             try:
                 progress = int(len(formatted) * elapsed / total)
-                formatted = '<span color="{0}">{1}</span>{2}'.format(
+                formatted = '<span color="{}">{}</span>{}'.format(
                     self.color_progress, formatted[:progress], formatted[progress:],
                 )
             except (ZeroDivisionError, ValueError):

@@ -73,7 +73,7 @@ class MockMocpProcess:
         arg = cmd[1]
 
         if arg == "-i":
-            output = "\n".join("{k}: {v}".format(k=k, v=v) for k, v in cls.info[cls.index].items())
+            output = "\n".join(f"{k}: {v}" for k, v in cls.info[cls.index].items())
             return output
 
         elif arg == "-p":

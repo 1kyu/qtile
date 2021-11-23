@@ -136,8 +136,8 @@ class Drawer(base.Drawer):
         self,
         offsetx: int = 0,
         offsety: int = 0,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ):
 
         self.current_rect = (offsetx, offsety, width, height)

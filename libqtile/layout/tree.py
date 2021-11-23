@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 # Copyright (c) 2011 Mounier Florian
 # Copyright (c) 2011 Paul Colomiets
 # Copyright (c) 2012 roger
@@ -32,7 +31,7 @@
 from libqtile import hook
 from libqtile.layout.base import Layout
 
-to_superscript = dict(zip(map(ord, u'0123456789'), map(ord, u'⁰¹²³⁴⁵⁶⁷⁸⁹')))
+to_superscript = dict(zip(map(ord, '0123456789'), map(ord, '⁰¹²³⁴⁵⁶⁷⁸⁹')))
 
 
 class TreeNode:
@@ -538,7 +537,7 @@ class TreeTab(Layout):
             return tree
 
         d = Layout.info(self)
-        d["clients"] = sorted([x.name for x in self._nodes])
+        d["clients"] = sorted(x.name for x in self._nodes)
         d["sections"] = [x.title for x in self._tree.children]
 
         trees = {}

@@ -648,10 +648,10 @@ class Connection:
         return self.conn.get_setup()
 
     def extensions(self):
-        return set(
+        return {
             i.name.to_string().lower()
             for i in self.conn.core.ListExtensions().reply().names
-        )
+        }
 
     def fixup_focus(self):
         """
@@ -686,7 +686,7 @@ class Painter:
         try:
             with open(image_path, 'rb') as f:
                 image, _ = cairocffi.pixbuf.decode_to_image_surface(f.read())
-        except IOError as e:
+        except OSError as e:
             logger.error('Wallpaper: %s' % e)
             return
 

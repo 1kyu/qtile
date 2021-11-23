@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Florian Mounier
 # Copyright (c) 2011 Kenji_Takahashi
 # Copyright (c) 2012 roger
@@ -176,7 +175,7 @@ class CurrentLayoutIcon(base._TextBox):
         self.icon_paths.append(os.path.join(root, 'resources', 'layout-icons'))
 
     def find_icon_file_path(self, layout_name):
-        icon_filename = 'layout-{}.png'.format(layout_name)
+        icon_filename = f'layout-{layout_name}.png'
         for icon_path in self.icon_paths:
             icon_file_path = os.path.join(icon_path, icon_filename)
             if os.path.isfile(icon_file_path):
@@ -189,12 +188,12 @@ class CurrentLayoutIcon(base._TextBox):
         for layout_name in self._get_layout_names():
             icon_file_path = self.find_icon_file_path(layout_name)
             if icon_file_path is None:
-                logger.warning('No icon found for layout "{}"'.format(layout_name))
+                logger.warning(f'No icon found for layout "{layout_name}"')
                 icon_file_path = self.find_icon_file_path('unknown')
 
             try:
                 img = cairocffi.ImageSurface.create_from_png(icon_file_path)
-            except (cairocffi.Error, IOError) as e:
+            except (cairocffi.Error, OSError) as e:
                 # Icon file is guaranteed to exist at this point.
                 # If this exception happens, it means the icon file contains
                 # an invalid image or is not readable.

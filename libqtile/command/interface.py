@@ -50,7 +50,7 @@ def format_selectors(selectors: List[SelectorType]) -> str:
     path_elements = []
     for name, selector in selectors:
         if selector is not None:
-            path_elements.append("{}[{}]".format(name, selector))
+            path_elements.append(f"{name}[{selector}]")
         else:
             path_elements.append(name)
     return ".".join(path_elements)
@@ -304,7 +304,7 @@ class IPCCommandServer:
             cmd = obj.command(name)
         except SelectError as err:
             sel_string = format_selectors(selectors)
-            return ERROR, "No object {} in path '{}'".format(err.name, sel_string)
+            return ERROR, f"No object {err.name} in path '{sel_string}'"
         if not cmd:
             return ERROR, "No such command"
 

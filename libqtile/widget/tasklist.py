@@ -234,7 +234,7 @@ class TaskList(base._Widget, base.PaddingMixin, base.MarginMixin):
             window_name = pangocffi.markup_escape_text(window_name)
             return markup_str.format(window_name)
 
-        return "%s%s" % (state, window_name)
+        return f"{state}{window_name}"
 
     @property
     def windows(self):
@@ -287,7 +287,7 @@ class TaskList(base._Widget, base.PaddingMixin, base.MarginMixin):
         if width_sum > width_total:
             # sum the width of tasks shorter than calculated average
             # and calculate a ratio to shrink boxes greater than width_avg
-            width_shorter_sum = sum([w for w in width_boxes if w < width_avg])
+            width_shorter_sum = sum(w for w in width_boxes if w < width_avg)
 
             ratio = ((width_total - width_shorter_sum) /
                      (width_sum - width_shorter_sum))

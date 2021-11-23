@@ -93,7 +93,7 @@ buttons = [
 DRM_FORMAT_ARGB8888 = 875713089
 
 
-def translate_masks(modifiers: List[str]) -> int:
+def translate_masks(modifiers: list[str]) -> int:
     """
     Translate a modifier mask specified as a list of strings into an or-ed
     bit representation.
@@ -118,7 +118,7 @@ class Painter:
         try:
             with open(image_path, 'rb') as f:
                 image, _ = cairocffi.pixbuf.decode_to_image_surface(f.read())
-        except IOError as e:
+        except OSError as e:
             logger.error('Wallpaper: %s' % e)
             return
 
@@ -190,7 +190,7 @@ class PointerConstraint(HasListeners):
     def __init__(self, core: Core, wlr_constraint: PointerConstraintV1):
         self.core = core
         self.wlr_constraint = wlr_constraint
-        self.window: Optional[WindowType] = None
+        self.window: WindowType | None = None
         self._warp_target = (0, 0)
         self._needs_warp = False
 
@@ -261,7 +261,7 @@ class Dnd(HasListeners):
     def __init__(self, core: Core, wlr_drag: data_device_manager.Drag):
         self.core = core
         self.wlr_drag = wlr_drag
-        self._outputs: Set[Output] = set()
+        self._outputs: set[Output] = set()
 
         self.x: float = core.cursor.x
         self.y: float = core.cursor.y

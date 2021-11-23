@@ -45,7 +45,7 @@ def terminal_width():
     try:
         cr = struct.unpack("hh", fcntl.ioctl(0, termios.TIOCGWINSZ, "1234"))
         width = int(cr[1])
-    except (IOError, ImportError):
+    except (OSError, ImportError):
         pass
     return width or 80
 
@@ -94,7 +94,7 @@ class QSh:
 
     @property
     def prompt(self) -> str:
-        return "{} > ".format(format_selectors(self._command_client.selectors))
+        return f"{format_selectors(self._command_client.selectors)} > "
 
     def columnize(self, lst, update_termwidth=True) -> str:
         if update_termwidth:
@@ -202,7 +202,7 @@ class QSh:
         else:
             allow_root, _ = next_node.items(rest_path)
             if not allow_root:
-                return "Item required for {}".format(rest_path)
+                return f"Item required for {rest_path}"
             self._command_client = next_node.navigate(rest_path, None)
 
         return format_selectors(self._command_client.selectors) or "/"
@@ -231,9 +231,9 @@ class QSh:
         objects, items = self._ls(node, rest_path)
 
         formatted_ls = [
-            "{}{}/".format(base_path, i) for i in objects
+            f"{base_path}{i}/" for i in objects
         ] + [
-            "{}[{}]/".format(base_path[:-1], i) for i in items
+            f"{base_path[:-1]}[{i}]/" for i in items
         ]
         return self.columnize(formatted_ls)
 
@@ -313,7 +313,7 @@ class QSh:
                 val = builtin(args)
                 return val
             else:
-                return "Invalid builtin: {}".format(cmd)
+                return f"Invalid builtin: {cmd}"
 
         command_match = re.fullmatch(r"(?P<cmd>\w+)\((?P<args>[\w\s,]*)\)", line)
         if command_match:
@@ -325,14 +325,14 @@ class QSh:
                 cmd_args = ()
 
             if cmd not in self._command_client.commands:
-                return "Command does not exist: {}".format(cmd)
+                return f"Command does not exist: {cmd}"
 
             try:
                 return self._command_client.call(cmd, *cmd_args)
             except CommandException as e:
-                return "Caught command exception (is the command invoked incorrectly?): {}\n".format(e)
+                return f"Caught command exception (is the command invoked incorrectly?): {e}\n"
 
-        return "Invalid command: {}".format(line)
+        return f"Invalid command: {line}"
 
     def loop(self) -> None:
         self.readline.set_completer(self.complete)  # type: ignore
@@ -351,7 +351,7 @@ class QSh:
             try:
                 val = self.process_line(line)
             except CommandError as e:
-                val = "Caught command error (is the current path still valid?): {}\n".format(e)
+                val = f"Caught command error (is the current path still valid?): {e}\n"
             if isinstance(val, str):
                 print(val)
             elif val:

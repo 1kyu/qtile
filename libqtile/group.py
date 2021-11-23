@@ -119,7 +119,7 @@ class _Group(CommandObject):
                 )
                 self.layout_all()
                 return
-        logger.error("No such layout: {}".format(layout))
+        logger.error(f"No such layout: {layout}")
 
     def use_layout(self, index):
         assert -len(self.layouts) <= index < len(self.layouts), "layout index out of bounds"
@@ -327,7 +327,7 @@ class _Group(CommandObject):
             for i in self.windows:
                 if i.wid == sel:
                     return i
-        raise RuntimeError("Invalid selection: {}".format(name))
+        raise RuntimeError(f"Invalid selection: {name}")
 
     def cmd_setlayout(self, layout):
         self.layout = layout

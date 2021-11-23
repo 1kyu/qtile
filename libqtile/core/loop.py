@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class LoopContext(contextlib.AbstractAsyncContextManager):
     def __init__(
         self,
-        signals: Optional[Dict[signal.Signals, Callable]] = None,
+        signals: dict[signal.Signals, Callable] | None = None,
     ) -> None:
         super().__init__()
         self._signals = signals or {}

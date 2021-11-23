@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2011 Florian Mounier
 # Copyright (c) 2011 Mounier Florian
 # Copyright (c) 2012 roger
@@ -102,7 +101,7 @@ class Notify(base._TextBox):
         self.text = pangocffi.markup_escape_text(notif.summary)
         urgency = getattr(notif.hints.get('urgency'), "value", 1)
         if urgency != 1:
-            self.text = '<span color="%s">%s</span>' % (
+            self.text = '<span color="{}">{}</span>'.format(
                 utils.hex(
                     self.foreground_urgent if urgency == 2
                     else self.foreground_low
@@ -110,7 +109,7 @@ class Notify(base._TextBox):
                 self.text
             )
         if notif.body:
-            self.text = '<span weight="bold">%s</span> - %s' % (
+            self.text = '<span weight="bold">{}</span> - {}'.format(
                 self.text, pangocffi.markup_escape_text(notif.body)
             )
         if callable(self.parse_text):

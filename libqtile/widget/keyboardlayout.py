@@ -54,7 +54,7 @@ class _BaseLayoutBackend(metaclass=ABCMeta):
         Examples: "us", "us dvorak".  In case of error returns "unknown".
         """
 
-    def set_keyboard(self, layout: str, options: Optional[str]) -> None:
+    def set_keyboard(self, layout: str, options: str | None) -> None:
         """
         Set the keyboard layout with specified options.
         """
@@ -69,10 +69,10 @@ class _X11LayoutBackend(_BaseLayoutBackend):
             command = 'setxkbmap -verbose 10 -query'
             setxkbmap_output = check_output(command.split(' ')).decode()
         except CalledProcessError as e:
-            logger.error('Can not get the keyboard layout: {0}'.format(e))
+            logger.error(f'Can not get the keyboard layout: {e}')
             return "unknown"
         except OSError as e:
-            logger.error('Please, check that xset is available: {0}'.format(e))
+            logger.error(f'Please, check that xset is available: {e}')
             return "unknown"
 
         match_layout = self.kb_layout_regex.search(setxkbmap_output)
@@ -85,7 +85,7 @@ class _X11LayoutBackend(_BaseLayoutBackend):
             keyboard += " " + match_variant.group('variant')
         return keyboard
 
-    def set_keyboard(self, layout: str, options: Optional[str]) -> None:
+    def set_keyboard(self, layout: str, options: str | None) -> None:
         command = ['setxkbmap']
         command.extend(layout.split(" "))
         if options:
@@ -93,9 +93,9 @@ class _X11LayoutBackend(_BaseLayoutBackend):
         try:
             check_output(command)
         except CalledProcessError as e:
-            logger.error('Can not change the keyboard layout: {0}'.format(e))
+            logger.error(f'Can not change the keyboard layout: {e}')
         except OSError as e:
-            logger.error('Please, check that setxkbmap is available: {0}'.format(e))
+            logger.error(f'Please, check that setxkbmap is available: {e}')
 
 
 class _WaylandLayoutBackend(_BaseLayoutBackend):
@@ -106,8 +106,8 @@ class _WaylandLayoutBackend(_BaseLayoutBackend):
     def get_keyboard(self) -> str:
         return self._layout
 
-    def set_keyboard(self, layout: str, options: Optional[str]) -> None:
-        maybe_variant: Optional[str] = None
+    def set_keyboard(self, layout: str, options: str | None) -> None:
+        maybe_variant: str | None = None
         if " " in layout:
             layout_name, maybe_variant = layout.split(" ", maxsplit=1)
         else:

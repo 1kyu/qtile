@@ -47,7 +47,7 @@ def clear():
 
 class Subscribe:
     def __init__(self):
-        hooks = set([])
+        hooks = set()
         for i in dir(self):
             if not i.startswith("_"):
                 hooks.add(i)

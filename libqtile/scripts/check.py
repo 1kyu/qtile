@@ -101,12 +101,12 @@ def type_check_config_args(config_file):
         subprocess.check_call(["mypy", "--python-version=3.8", config_file])
         print("config file type checking succeeded")
     except subprocess.CalledProcessError as e:
-        print("config file type checking failed: {}".format(e))
+        print(f"config file type checking failed: {e}")
         sys.exit(1)
 
 
 def check_config(args):
-    print("checking qtile config file {}".format(args.configfile))
+    print(f"checking qtile config file {args.configfile}")
 
     # need to do all the checking in a tempdir because we need to write stuff
     # for stubtest

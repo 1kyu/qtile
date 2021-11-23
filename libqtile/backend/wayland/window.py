@@ -78,26 +78,26 @@ class Window(base.Window, HasListeners):
         self.core = core
         self.qtile = qtile
         self.surface = surface
-        self._group: Optional[_Group] = None
-        self.popups: List[XdgPopupWindow] = []
-        self.subsurfaces: List[SubSurface] = []
+        self._group: _Group | None = None
+        self.popups: list[XdgPopupWindow] = []
+        self.subsurfaces: list[SubSurface] = []
         self._mapped: bool = False
         self.x = 0
         self.y = 0
-        self.bordercolor: List[ffi.CData] = [_rgb((0, 0, 0, 1))]
+        self.bordercolor: list[ffi.CData] = [_rgb((0, 0, 0, 1))]
         self._opacity: float = 1.0
-        self._outputs: List[Output] = []
+        self._outputs: list[Output] = []
 
         # These become non-zero when being mapping for the first time
         self._width: int = 0
         self._height: int = 0
 
         assert isinstance(surface, XdgSurface)
-        self._app_id: Optional[str] = surface.toplevel.app_id
+        self._app_id: str | None = surface.toplevel.app_id
 
         self._float_state = FloatStates.NOT_FLOATING
-        self.float_x: Optional[int] = None
-        self.float_y: Optional[int] = None
+        self.float_x: int | None = None
+        self.float_y: int | None = None
         self._float_width: int = 0
         self._float_height: int = 0
 
@@ -138,11 +138,11 @@ class Window(base.Window, HasListeners):
         self._height = height
 
     @property
-    def group(self) -> Optional[_Group]:
+    def group(self) -> _Group | None:
         return self._group
 
     @group.setter
-    def group(self, group: Optional[_Group]) -> None:
+    def group(self, group: _Group | None) -> None:
         self._group = group
 
     @property
@@ -246,7 +246,7 @@ class Window(base.Window, HasListeners):
             0 < state.min_height == state.max_height
         )
 
-    def is_transient_for(self) -> Optional[base.WindowType]:
+    def is_transient_for(self) -> base.WindowType | None:
         """What window is this window a transient window for?"""
         assert isinstance(self.surface, XdgSurface)
         parent = self.surface.toplevel.parent
@@ -282,7 +282,7 @@ class Window(base.Window, HasListeners):
         )
         return pid[0]
 
-    def get_wm_class(self) -> Optional[List]:
+    def get_wm_class(self) -> list | None:
         if self._app_id:
             return [self._app_id]
         return None
@@ -516,7 +516,7 @@ class Window(base.Window, HasListeners):
                 self.group.mark_floating(self, True)
             hook.fire('float_change')
 
-    def info(self) -> Dict:
+    def info(self) -> dict:
         """Return a dictionary of info."""
         float_info = {
             "x": self.float_x,
@@ -609,10 +609,10 @@ class Window(base.Window, HasListeners):
         self.place(x, y, width, height, borderwidth, bordercolor, above,
                    margin)
 
-    def cmd_get_position(self) -> Tuple[int, int]:
+    def cmd_get_position(self) -> tuple[int, int]:
         return self.x, self.y
 
-    def cmd_get_size(self) -> Tuple[int, int]:
+    def cmd_get_size(self) -> tuple[int, int]:
         return self.width, self.height
 
     def cmd_toggle_floating(self) -> None:
@@ -650,11 +650,11 @@ class Window(base.Window, HasListeners):
 
     def cmd_static(
         self,
-        screen: Optional[int] = None,
-        x: Optional[int] = None,
-        y: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        screen: int | None = None,
+        x: int | None = None,
+        y: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         self.defunct = True
         if screen is None:
@@ -706,7 +706,7 @@ class Internal(base.Internal, Window):
         self._opacity: float = 1.0
         self._width: int = width
         self._height: int = height
-        self._outputs: List[Output] = []
+        self._outputs: list[Output] = []
         self._find_outputs()
         self._reset_texture()
 
@@ -782,7 +782,7 @@ class Internal(base.Internal, Window):
         self._find_outputs()
         self.damage()
 
-    def info(self) -> Dict:
+    def info(self) -> dict:
         """Return a dictionary of info."""
         return dict(
             x=self.x,
@@ -809,7 +809,7 @@ class Static(base.Static, Window):
         self.core = core
         self.qtile = qtile
         self.surface = surface
-        self.subsurfaces: List[SubSurface] = []
+        self.subsurfaces: list[SubSurface] = []
         self._wid = wid
         self._mapped: bool = False
         self.x = 0
@@ -817,9 +817,9 @@ class Static(base.Static, Window):
         self._width = 0
         self._height = 0
         self.borderwidth: int = 0
-        self.bordercolor: List[ffi.CData] = [_rgb((0, 0, 0, 1))]
+        self.bordercolor: list[ffi.CData] = [_rgb((0, 0, 0, 1))]
         self.opacity: float = 1.0
-        self._outputs: List[Output] = []
+        self._outputs: list[Output] = []
         self._float_state = FloatStates.FLOATING
         self.is_layer = False
 
@@ -935,11 +935,11 @@ class XdgPopupWindow(HasListeners):
     work for us, but we need to listen to certain events so that we know when to render
     frames and we need to unconstrain the popups so they are completely visible.
     """
-    def __init__(self, parent: Union[WindowType, XdgPopupWindow], xdg_popup: XdgPopup):
+    def __init__(self, parent: WindowType | XdgPopupWindow, xdg_popup: XdgPopup):
         self.parent = parent
         self.xdg_popup = xdg_popup
         self.core: Core = parent.core
-        self.popups: List[XdgPopupWindow] = []
+        self.popups: list[XdgPopupWindow] = []
 
         # Keep on output
         if isinstance(parent, XdgPopupWindow):
@@ -991,9 +991,9 @@ class SubSurface(HasListeners):
     parent window (of `Union[WindowType, SubSurface]`). We only need to track them so
     that we can listen to their commit events and render accordingly.
     """
-    def __init__(self, parent: Union[WindowType, SubSurface], subsurface: WlrSubSurface):
+    def __init__(self, parent: WindowType | SubSurface, subsurface: WlrSubSurface):
         self.parent = parent
-        self.subsurfaces: List[SubSurface] = []
+        self.subsurfaces: list[SubSurface] = []
 
         self.add_listener(subsurface.destroy_event, self._on_destroy)
         self.add_listener(subsurface.surface.commit_event, parent._on_commit)

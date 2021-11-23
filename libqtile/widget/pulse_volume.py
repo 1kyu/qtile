@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 
 from libqtile.widget._pulse_audio import ffi, lib

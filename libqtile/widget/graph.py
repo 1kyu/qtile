@@ -96,12 +96,11 @@ class _Graph(base._Widget):
         return self.graphwidth / float(self.samples)
 
     def _for_each_step(self, values):
-        for index, val in enumerate(itertools.islice(
+        yield from enumerate(itertools.islice(
             values,
             max(int(-(self.graphwidth / self.step()) + len(values)), 0),
             len(values),
-        )):
-            yield index, val
+        ))
 
     def _prepare_context(self):
         self.drawer.ctx.set_line_join(cairocffi.LINE_JOIN_ROUND)
@@ -228,7 +227,7 @@ class CPUGraph(_Graph):
 
         if isinstance(self.core, int):
             if self.core > psutil.cpu_count() - 1:
-                raise ValueError("No such core: {}".format(self.core))
+                raise ValueError(f"No such core: {self.core}")
             cpu = psutil.cpu_times(percpu=True)[self.core]
         else:
             cpu = psutil.cpu_times()
@@ -356,7 +355,7 @@ class NetGraph(_Graph):
                 )
                 self.interface = "eth0"
         if self.bandwidth_type != "down" and self.bandwidth_type != "up":
-            raise ValueError("bandwidth type {} not known!".format(self.bandwidth_type))
+            raise ValueError(f"bandwidth type {self.bandwidth_type} not known!")
         self.bytes = 0
         self.bytes = self._get_values()
 
@@ -444,7 +443,7 @@ class HDDBusyGraph(_Graph):
             # io_ticks is field number 9
             with open(self.path) as f:
                 io_ticks = int(f.read().split()[9])
-        except IOError:
+        except OSError:
             return 0
         activity = io_ticks - self._prev
         self._prev = io_ticks

@@ -350,4 +350,4 @@ class TestManager:
 def assert_window_died(client, window_info):
     client.sync()
     wid = window_info['id']
-    assert wid not in set([x['id'] for x in client.windows()])
+    assert wid not in {x['id'] for x in client.windows()}

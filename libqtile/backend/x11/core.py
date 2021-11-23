@@ -102,7 +102,7 @@ class Core(base.Core):
             supporting_wm = window.XWindow(self.conn, supporting_wm_wid)
             existing_wmname = supporting_wm.get_property("_NET_WM_NAME", "UTF8_STRING", unpack=str)
             if existing_wmname:
-                logger.error("not starting; existing window manager {}".format(existing_wmname))
+                logger.error(f"not starting; existing window manager {existing_wmname}")
                 raise ExistingWMException(existing_wmname)
 
         self.eventmask = (
@@ -349,7 +349,7 @@ class Core(base.Core):
         """
         assert self.qtile is not None
 
-        handler = "handle_{event_type}".format(event_type=event_type)
+        handler = f"handle_{event_type}"
         # Certain events expose the affected window id as an "event" attribute.
         event_events = [
             "EnterNotify",

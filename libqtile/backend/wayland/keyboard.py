@@ -55,7 +55,7 @@ class Keyboard(HasListeners):
 
         self.keyboard.set_repeat_info(25, 600)
         self.xkb_context = xkb.Context()
-        self._keymaps: Dict[Tuple[Optional[str], ...], xkb.Keymap] = {}
+        self._keymaps: dict[tuple[str | None, ...], xkb.Keymap] = {}
         self.set_keymap(None, None, None)
 
         self.add_listener(self.keyboard.modifiers_event, self._on_modifier)
@@ -69,7 +69,7 @@ class Keyboard(HasListeners):
             self.seat.set_keyboard(self.core.keyboards[-1].device)
 
     def set_keymap(
-        self, layout: Optional[str], options: Optional[str], variant: Optional[str]
+        self, layout: str | None, options: str | None, variant: str | None
     ) -> None:
         """
         Set the keymap for this keyboard.

@@ -34,7 +34,7 @@ class _WinStack(_ClientList):
         self.split = False if self.split else True
 
     def __str__(self):
-        return "_WinStack: %s, %s" % (
+        return "_WinStack: {}, {}".format(
             self.cw, str([client.name for client in self.clients])
         )
 

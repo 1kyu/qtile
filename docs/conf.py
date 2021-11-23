@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Qtile documentation build configuration file, created by
 # sphinx-quickstart on Sat Feb 11 15:20:21 2012.
@@ -114,8 +113,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Qtile'
-copyright = u'2008-2021, Aldo Cortesi and contributers'
+project = 'Qtile'
+copyright = '2008-2021, Aldo Cortesi and contributers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -264,8 +263,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Qtile.tex', u'Qtile Documentation',
-   u'Aldo Cortesi', 'manual'),
+  ('index', 'Qtile.tex', 'Qtile Documentation',
+   'Aldo Cortesi', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -305,8 +304,8 @@ latex_documents = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Qtile', u'Qtile Documentation',
-   u'Aldo Cortesi', 'Qtile', 'A hackable tiling window manager.',
+  ('index', 'Qtile', 'Qtile Documentation',
+   'Aldo Cortesi', 'Qtile', 'A hackable tiling window manager.',
    'Miscellaneous'),
 ]
 

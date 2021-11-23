@@ -48,7 +48,7 @@ class FakeIMAP(ModuleType):
 
             return (
                 "OK",
-                ['"{}" (UNSEEN 2)'.format(path).encode()]
+                [f'"{path}" (UNSEEN 2)'.encode()]
             )
 
         def logout(self):

@@ -29,7 +29,7 @@
 def assert_focused(self, name):
     """Asserts that window with specified name is currently focused"""
     info = self.c.window.info()
-    assert info['name'] == name, 'Got {0!r}, expected {1!r}'.format(
+    assert info['name'] == name, 'Got {!r}, expected {!r}'.format(
         info['name'], name)
 
 
